@@ -26,5 +26,17 @@ public class App {
 
         WebElement buttonLogin = driver.findElement(By.xpath("//button[contains(@class, 'btn btn-default')]"));
         buttonLogin.click();
+        
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
+        List<WebElement> buttonDeposit = driver.findElements(By.xpath("//button[contains(@class, 'btn btn-lg tab')]"));
+        buttonDeposit.get(1).click();
+
+        
+        WebElement inputAmout = driver.findElement(By.cssSelector("input[ng-model='amount']"));
+        inputAmout.sendKeys("10");
+
+        WebElement sendAmount = driver.findElement(By.xpath("//button[contains(@class, 'btn btn-default')]"));
+        sendAmount.click();
     }
 }

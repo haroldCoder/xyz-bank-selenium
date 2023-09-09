@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
@@ -20,5 +21,10 @@ public class App {
 
         // Haz clic en el botón
         buttonCustomer.click();
+        List<WebElement> buttonSelect = driver.findElements(By.xpath("//option[contains(@class, 'ng-binding ng-scope')]"));
+        buttonSelect.get(1).click();
+
+        WebElement buttonLogin = driver.findElement(By.xpath("//button[contains(@class, 'btn btn-default')]"));
+        buttonLogin.click();
     }
 }

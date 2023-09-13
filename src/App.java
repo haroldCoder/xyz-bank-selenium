@@ -1,21 +1,25 @@
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.NoSuchElementException;
+
+import org.junit.*;
 
 public class App {
-    /**
-     * @param args
-     * @throws Exception
-     */
-    public static void main(String[] args) throws Exception {
-        System.setProperty("webdriver.chrome.driver",
-                "C:\\Users\\koderx\\Desktop\\Nueva carpeta\\banco\\src\\drivers\\chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
-        driver.get("https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login");
+    WebDriver driver;
+    public App(){
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\koderx\\Desktop\\Nueva carpeta\\banco\\src\\drivers\\chromedriver.exe");
+        this.driver = new ChromeDriver();
+
+        // Abre la página web
+        this.driver.get("https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login");
+    }
+
+    @Test
+    public void Ejecutar(){
 
         // darle tiempo de espera a la pagina
 
@@ -44,15 +48,20 @@ public class App {
 
         WebElement sendAmount = driver.findElement(By.xpath("//button[contains(@class, 'btn btn-default')]"));
         sendAmount.click();
+        WebElement spansuccess = this.driver.findElement(By.cssSelector("span[ng-show='message']"));
 
-        WebElement spansuccess = driver.findElement(By.cssSelector("span[ng-show='message']"));
- 
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-        if (spansuccess.isDisplayed()) {
-            JavascriptExecutor js = (JavascriptExecutor) driver;
-            js.executeScript("alert('El deposito se completo');");
-        } else {
+        System.out.println(spansuccess.isDisplayed());
+    }
 
-        }
+    @Test 
+    public void ExisteDeposito(){
+        Ejecutar();
+        WebElement spansuccess = this.driver.findElement(By.cssSelector("span[ng-show='message']"));;
+        Assert.assertTrue(spansuccess.isDisplayed());
+    }
+
+    public static void main(String[] args) throws Exception {
+        App app = new App();
+        app.ExisteDeposito();
     }
 }

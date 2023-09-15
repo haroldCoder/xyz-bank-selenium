@@ -10,6 +10,8 @@ import org.junit.*;
 
 public class App {
     WebDriver driver;
+    String buttons[];
+
     public App(){
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\koderx\\Desktop\\Nueva carpeta\\banco\\src\\drivers\\chromedriver.exe");
         this.driver = new ChromeDriver();
@@ -20,37 +22,47 @@ public class App {
 
     @Test
     public void Ejecutar(){
+        buttons = new String[4];
 
+        buttons[0] = "//button[contains(@class, 'btn btn-primary btn-lg')]";
+        buttons[1] = "//button[contains(@class, 'btn btn-default')]";
+        buttons[2] = "//button[contains(@class, 'btn btn-lg tab')]";
+        buttons[3] = "//button[contains(@class, 'btn btn-default')]";
         // darle tiempo de espera a la pagina
 
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
         // Encuentra el elemento del botón
-        WebElement buttonCustomer = driver
-                .findElement(By.xpath("//button[contains(@class, 'btn btn-primary btn-lg')]"));
-
-        // Haz clic en el botón
-        buttonCustomer.click();
+        ClickBtn(buttons[0], false, 0);
         List<WebElement> buttonSelect = driver
                 .findElements(By.xpath("//option[contains(@class, 'ng-binding ng-scope')]"));
         buttonSelect.get(1).click();
 
-        WebElement buttonLogin = driver.findElement(By.xpath("//button[contains(@class, 'btn btn-default')]"));
-        buttonLogin.click();
+        ClickBtn(buttons[1], false, 0);
 
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
-        List<WebElement> buttonDeposit = driver.findElements(By.xpath("//button[contains(@class, 'btn btn-lg tab')]"));
-        buttonDeposit.get(1).click();
+        ClickBtn(buttons[2], true, 1);
 
         WebElement inputAmout = driver.findElement(By.cssSelector("input[ng-model='amount']"));
         inputAmout.sendKeys("10");
 
-        WebElement sendAmount = driver.findElement(By.xpath("//button[contains(@class, 'btn btn-default')]"));
-        sendAmount.click();
+        ClickBtn(buttons[3], false, 0);
         WebElement spansuccess = this.driver.findElement(By.cssSelector("span[ng-show='message']"));
 
         System.out.println(spansuccess.isDisplayed());
+    }
+
+    public void ClickBtn(String xpath, boolean list, int index){
+        if(!list){
+            WebElement button = driver.findElement(By.xpath(xpath));
+            button.click();
+        }
+        else{
+            List<WebElement> buttonSelect = driver
+                .findElements(By.xpath(xpath));
+            buttonSelect.get(index).click();
+        }
     }
 
     @Test 

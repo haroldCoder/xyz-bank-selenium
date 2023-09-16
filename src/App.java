@@ -9,6 +9,8 @@ import org.junit.*;
 public class App {
     WebDriver driver;
     String buttons[];
+    float retiro = 10;
+    float deposite = 10;
 
     public App(){
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\koderx\\Desktop\\Nueva carpeta\\banco\\src\\drivers\\chromedriver.exe");
@@ -43,7 +45,7 @@ public class App {
         ClickBtn(buttons[2], true, 1);
 
         WebElement inputAmout = driver.findElement(By.cssSelector("input[ng-model='amount']"));
-        inputAmout.sendKeys("10");
+        inputAmout.sendKeys(String.valueOf(retiro));
 
         ClickBtn(buttons[3], false, 0);
         WebElement spansuccess = this.driver.findElement(By.cssSelector("span[ng-show='message']"));
@@ -68,10 +70,36 @@ public class App {
         Ejecutar();
         WebElement spansuccess = this.driver.findElement(By.cssSelector("span[ng-show='message']"));;
         Assert.assertTrue(spansuccess.isDisplayed());
+        Retirar();
+    }
+
+    public void Retirar(){
+        WebElement withdraw = driver.findElement(By.cssSelector("button[ng-class='btnClass3']"));
+        withdraw.click();
+        WebElement inputAmout = driver.findElement(By.xpath("//input[contains(@class, 'form-control ng-pristine ng-untouched ng-invalid ng-invalid-required')]"));
+        inputAmout.sendKeys(String.valueOf(retiro));
+
+        WebElement buttonretirar = driver.findElement(By.xpath("//button[contains(@class, 'btn btn-default')]"));
+        buttonretirar.click();
+    }
+
+    @Test
+    public void HayRetiro(){
+        ExisteDeposito();
+        WebElement retirosuccess = this.driver.findElement(By.xpath("//span[contains(@class, 'error ng-binding')]"));;
+        Assert.assertTrue(retirosuccess.isDisplayed());
+    }
+
+    @Test
+    public void RestoBalance(){
+        ExisteDeposito();
+        List<WebElement> balance = this.driver.findElements(By.xpath("//strong[contains(@class, 'ng-binding')]"));
+        float resultado = deposite - retiro;
+        Assert.assertEquals(String.valueOf(Math.round(resultado)), balance.get(1).getText());
     }
 
     public static void main(String[] args) throws Exception {
         App app = new App();
-        app.ExisteDeposito();
+        app.RestoBalance();
     }
 }

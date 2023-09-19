@@ -7,11 +7,12 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.junit.*;
 
 public class App {
-    WebDriver driver;
+    private WebDriver driver;
     String buttons[];
     float retiro = 10;
     float deposite = 10;
 
+    
     public App(){
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\koderx\\Desktop\\Nueva carpeta\\banco\\src\\drivers\\chromedriver.exe");
         this.driver = new ChromeDriver();
@@ -96,6 +97,11 @@ public class App {
         List<WebElement> balance = this.driver.findElements(By.xpath("//strong[contains(@class, 'ng-binding')]"));
         float resultado = deposite - retiro;
         Assert.assertEquals(String.valueOf(Math.round(resultado)), balance.get(1).getText());
+    }
+
+    @AfterClass
+    public static void tearDown(){
+       new App().driver.quit();
     }
 
     public static void main(String[] args) throws Exception {
